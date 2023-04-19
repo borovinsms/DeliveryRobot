@@ -6,12 +6,14 @@ public class Main {
     public static final Map<Integer, Integer> sizeToFreq = new HashMap<>();
     ;
 
-    public static synchronized void incrementMapByKey(Integer key) {
-        if (sizeToFreq.containsKey(key)) {
-            Integer counter = sizeToFreq.get(key);
-            sizeToFreq.put(key, counter + 1);
-        } else {
-            sizeToFreq.put(key, 1);
+    public static void incrementMapByKey(Integer key) {
+        synchronized (sizeToFreq) {
+            if (sizeToFreq.containsKey(key)) {
+                Integer counter = sizeToFreq.get(key);
+                sizeToFreq.put(key, counter + 1);
+            } else {
+                sizeToFreq.put(key, 1);
+            }
         }
     }
 
