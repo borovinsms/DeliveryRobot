@@ -1,9 +1,6 @@
 package org.example;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class Main {
     public static final Map<Integer, Integer> sizeToFreq = new HashMap<>();
@@ -47,16 +44,22 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+        List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
-            new Thread(() -> {
+            Thread thread = new Thread(() -> {
                 String route = generateRoute("RLRFR", 100);
                 countFrequency(route, 'R');
                 try {
                     Thread.sleep(300);
                 } catch (InterruptedException ignored) {
                 }
-            }).start();
+            });
+            thread.start();
+            threads.add(thread);
+        }
+        for(Thread th: threads) {
+            th.join();
         }
         Map.Entry<Integer, Integer> maxEntry = Collections.max(sizeToFreq.entrySet(), Map.Entry.comparingByValue());
         System.out.format("Самое частое количество повторений %d (встретилось %d раз) \n",maxEntry.getKey(),maxEntry.getValue());
